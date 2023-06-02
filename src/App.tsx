@@ -15,12 +15,21 @@ const App = () => {
     if (!inputValue.trim()) return;
 
     setIsLoading(true);
+    const input = inputValue.trim();
 
     try {
       const options = {
         method: "POST",
         body: JSON.stringify({
-          message: inputValue.trim(),
+          messages: [
+            ...previousChats
+              .filter((previousChat) => previousChat.title === currentTitle)
+              .map((previousChat) => ({
+                role: previousChat.role,
+                content: previousChat.content,
+              })),
+            { role: "user", content: input },
+          ],
         }),
         headers: {
           "Content-Type": "application/json",
